@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.1] - 2026-10-08
+
+### Changed
+
+- Add a link to the documentation site in README
+
+## [0.1.0] - 2026-10-08
+
 ### Added
 
-- Initial release: publish the files in `downloads` (or any configured folder names) and link to them with relative paths from Markdown, in `vitepress dev` and `vitepress build`.
+- Initial release: publish the files in `downloads` (or any configured folder names) and link to them with relative paths from Markdown.
