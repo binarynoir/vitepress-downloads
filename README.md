@@ -49,20 +49,62 @@ npm install --save-dev @binarynoir/vitepress-downloads
 
 ## Usage
 
+Add three pieces to `.vitepress/config.mts`. Each one does a separate job, and
+they all take the same options:
+
+```ts
+// .vitepress/config.mts
+import { defineConfig } from "vitepress";
+import { downloadsMarkdown, downloadsVitePlugin } from "@binarynoir/vitepress-downloads";
+import { downloadsSrcExclude } from "@binarynoir/vitepress-downloads/vitepress";
+
+// The same options go to all three pieces.
+const options = { folders: ["downloads", "files"] };
+
+export default defineConfig({
+  // Keeps files in a download folder from being built as pages.
+  srcExclude: downloadsSrcExclude(options),
+
+  markdown: {
+    // Rewrites links into a download folder so the browser downloads the file.
+    config: (md) => {
+      md.use(downloadsMarkdown, options);
+    },
+  },
+
+  vite: {
+    // Publishes the files at their page-relative URL, in dev and in the build.
+    plugins: [downloadsVitePlugin(options)],
+  },
+});
+```
+
+Leave the options out to use the default folder name, `downloads`. If you
+already have a `markdown.config` or `vite.plugins`, add the plugin to them as you
+would any other.
+
+### Shortcut: `withDownloads`
+
+If you would rather not wire the three pieces by hand, wrap your config instead:
+
 ```ts
 // .vitepress/config.mts
 import { defineConfig } from "vitepress";
 import { withDownloads } from "@binarynoir/vitepress-downloads/vitepress";
 
+const options = { folders: ["downloads", "files"] };
+
 export default withDownloads(
   defineConfig({
     // ...your config
   }),
+  options,
 );
 ```
 
-`withDownloads` keeps your existing `srcExclude`, `markdown.config` and
-`vite.plugins`, so it composes with other `withX()` wrappers in any order.
+`withDownloads` does the same three things. It keeps your existing `srcExclude`,
+`markdown.config` and `vite.plugins`, so it composes with other `withX()`
+wrappers in any order.
 
 ### Linking
 
@@ -91,8 +133,10 @@ That attribute is also what keeps VitePress from turning `file.sql` into
 | `onMissing` | `"warn"`        | What to do when a link points into a download folder but the file is not there: `"warn"`, `"error"` (fails the build) or `"ignore"`. |
 
 ```ts
-withDownloads(config, { folders: ["downloads", "files"], onMissing: "error" });
+const options = { folders: ["downloads", "files"], onMissing: "error" };
 ```
+
+Pass the same `options` to all three pieces, or as the second argument to `withDownloads`.
 
 ## Sidebar and navbar
 
@@ -117,23 +161,6 @@ downloads/
 - **Build**: files are emitted once, by the client build, at the same path they have under the source directory.
 - **Case matters**: `Downloads` is not `downloads`.
 - **Everything in a download folder is public.** The files are copied into the built site as they are. Do not keep anything there you would not put on the site.
-
-## Lower-level pieces
-
-`withDownloads` is three things. Use them separately when you need more control:
-
-```ts
-import { downloadsMarkdown, downloadsVitePlugin } from "@binarynoir/vitepress-downloads";
-import { downloadsSrcExclude } from "@binarynoir/vitepress-downloads/vitepress";
-
-export default defineConfig({
-  srcExclude: downloadsSrcExclude({ folders: ["files"] }),
-  markdown: { config: (md) => md.use(downloadsMarkdown, { folders: ["files"] }) },
-  vite: { plugins: [downloadsVitePlugin({ folders: ["files"] })] },
-});
-```
-
-Pass the same options to all three.
 
 ## Releasing
 
