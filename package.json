@@ -1,6 +1,6 @@
 {
   "name": "@binarynoir/vitepress-downloads",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "A VitePress plugin that publishes the files in a folder named downloads (or any names you choose) so Markdown pages can link to them with a plain relative path.",
   "keywords": [
     "vitepress",
