@@ -87,7 +87,7 @@
     "eslint-config-prettier": "^10.1.8",
     "markdown-it": "^15.0.2",
     "prettier": "^3.9.8",
-    "tsup": "^8.5.1",
+    "tsup": "^9.0.0",
     "typescript": "^6.0.3",
     "typescript-eslint": "^8.70.0",
     "vite": "^8.3.0",
